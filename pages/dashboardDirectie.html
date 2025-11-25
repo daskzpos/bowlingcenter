@@ -36,21 +36,30 @@
     <!-- Main content -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
-      <!-- Welkom sectie met + Klant aanmaken knop -->
+      <!-- Welkom sectie met knoppen -->
       <div
-        class="bg-gradient-to-r from-orange-600 to-orange-500 rounded-2xl p-8 mb-8 shadow-xl flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+        class="bg-gradient-to-r from-orange-600 to-orange-500 rounded-2xl p-8 mb-8 shadow-xl flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <h2 class="text-white text-4xl font-bold mb-2">Welkom terug! 💼</h2>
           <p class="text-white text-lg">Overzicht voor de directie van Brooklyn
             Bowl</p>
         </div>
 
-        <!-- Knop + Klant aanmaken -->
-        <a href="/pages/werkdirReserveer.html"
-           class="mt-4 md:mt-0 inline-block bg-white text-orange-600 font-semibold px-5 py-2 rounded-lg hover:bg-gray-100 transition">
-          + Reservering aanmaken
-        </a>
+        <!-- Knoppen -->
+        <div class="flex flex-col gap-3 md:flex-row">
+          <a href="/pages/werkdirReserveer.html"
+             class="inline-block bg-white text-orange-600 font-semibold px-5 py-2 rounded-lg hover:bg-gray-100 transition text-center">
+            + Reservering aanmaken
+          </a>
+          <a href="/pages/medewerkerToevoegen.html"
+             class="inline-block bg-white text-orange-600 font-semibold px-5 py-2 rounded-lg hover:bg-gray-100 transition text-center">
+            + Medewerker toevoegen
+          </a>
+        </div>
       </div>
+
+      
+
 
       <!-- Dashboard cards (3 kolommen, gecentreerd) -->
       <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -78,7 +87,7 @@
           </div>
           <p class="text-gray-400 mb-4">Bekijk en beheer klantgegevens</p>
           <a href="/pages/klantenBeheren.html"
-            class="w-full inline-block bg-gray-700 text-white py-2 rounded-lg font-semibold text-center hover:bg-gray-600 transition">
+            class="w-full inline-block bg-orange-600 text-white py-2 rounded-lg font-semibold text-center hover:bg-orange-700 transition">
             Klanten
           </a>
         </div>
@@ -91,10 +100,10 @@
             <span class="text-4xl">🎳</span>
           </div>
           <p class="text-gray-400 mb-4">Bekijk beschikbaarheid van banen</p>
-          <button
-            class="w-full bg-gray-700 text-white py-2 rounded-lg font-semibold hover:bg-gray-600 transition">
+          <a href="/pages/banenOverzicht.html"
+            class="w-full inline-block bg-orange-600 text-white py-2 rounded-lg font-semibold text-center hover:bg-orange-700 transition">
             Overzicht
-          </button>
+          </a>
         </div>
 
       </div>
