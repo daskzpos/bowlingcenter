@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900">
+
+  <!-- Navigation bar -->
+  <nav class="bg-black bg-opacity-80 backdrop-blur-lg shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        
+        <!-- Logo/Titel -->
+        <div class="flex items-center">
+          <h1 class="text-white text-2xl font-bold">Brooklyn Bowl</h1>
+        </div>
+        
+        <!-- Rechts: Welkom + Uitloggen -->
+        <div class="flex items-center gap-4">
+          <span class="text-gray-300">Welkom, <span class="text-orange-400 font-semibold">Gebruiker</span></span>
+          <a href="login.html" class="bg-orange-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-orange-700 transition">
+            Uitloggen
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main content -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    
+    <!-- Welkom sectie -->
+    <div class="bg-gradient-to-r from-orange-600 to-orange-500 rounded-2xl p-8 mb-8 shadow-xl">
+      <h2 class="text-white text-4xl font-bold mb-2">Welkom terug! 🎳</h2>
+      <p class="text-white text-lg">Klaar voor een nieuwe bowlingsessie?</p>
+    </div>
+
+    <!-- Dashboard cards (2 kolommen, 50/50, gecentreerd) -->
+    <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+      
+      <!-- Card 1: Nieuwe Reservering -->
+      <div class="bg-gray-800 rounded-xl p-6 shadow-lg hover:shadow-2xl transition">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-white text-xl font-bold">Nieuwe Reservering</h3>
+          <span class="text-4xl">📅</span>
+        </div>
+        <p class="text-gray-400 mb-4">Reserveer een baan voor jouw groep</p>
+        <button class="w-full bg-orange-600 text-white py-2 rounded-lg font-semibold hover:bg-orange-700 transition">
+          Reserveren
+        </button>
+      </div>
+
+      <!-- Card 2: Mijn Scores -->
+      <div class="bg-gray-800 rounded-xl p-6 shadow-lg hover:shadow-2xl transition">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-white text-xl font-bold">Mijn Scores</h3>
+          <span class="text-4xl">🏆</span>
+        </div>
+        <p class="text-gray-400 mb-4">Bekijk je bowlingstatistieken</p>
+        <button class="w-full bg-gray-700 text-white py-2 rounded-lg font-semibold hover:bg-gray-600 transition">
+          Statistieken
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Aankomende reserveringen sectie -->
+    <div class="bg-gray-800 rounded-xl p-6 shadow-lg">
+      <h3 class="text-white text-3xl font-bold mb-4">Reserveringen</h3>
+      <h3 class="text-white text-1xl font-bold mb-4">Aankomende reserveringen:</h3>
+      
+      <!-- Voorbeeld reservering -->
+      <div class="bg-gray-700 rounded-lg p-4 mb-3 flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+        <div>
+          <p class="text-white font-semibold">Baan 3</p>
+          <p class="text-gray-400 text-sm">Zaterdag 30 november, 19:00 - 21:00</p>
+        </div>
+        <div class="flex gap-2">
+          <button class="bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-orange-700 transition">
+            Details
+          </button>
+          <button class="bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-red-700 transition">  
+            Annuleren  
+          </button>
+        </div>
+      </div>
+      <h3 class="text-white text-1xl font-bold mb-4">Afgelopen reserveringen:</h3>
+       <div class="bg-gray-700 rounded-lg p-4 mb-3 flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+        <div>
+          <p class="text-white font-semibold">Baan 6</p>
+          <p class="text-gray-400 text-sm">Zaterdag 12 oktober, 17:00 - 18:15</p>
+        </div>
+        <div class="flex gap-2">
+          <button class="bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-orange-700 transition">
+            Details
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>
