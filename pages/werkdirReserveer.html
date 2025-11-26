@@ -478,24 +478,35 @@
         const lanes = parseInt(lanesInput.value) || 1;
         const isKinderpartij = document.getElementById('kinderpartij')?.checked || false;
         
-        const totalPeople = adults + kids;
-        const peoplePerLane = totalPeople / lanes;
-        
+        let isValid = true;
         let warning = '';
         
-        if (isKinderpartij) {
+        // Check capacity per lane
+        // Rule: max 8 adults per lane OR 6 adults + 4 kids per lane
+        if (kids > 0) {
+          // We have kids, so we need to validate the 6 adults + 4 kids rule per lane
           const adultsPerLane = adults / lanes;
           const kidsPerLane = kids / lanes;
           
+          // Check if any lane would exceed 6 adults + 4 kids
           if (adultsPerLane > 6 || kidsPerLane > 4) {
-            warning = '⚠️ Voor kinderfeestjes: max 6 volwassenen en 4 kinderen per baan';
-          } else if (peoplePerLane > 10) {
-            warning = '⚠️ Maximaal 10 personen per baan bij kinderfeestjes';
+            warning = '⚠️ Per baan: max 6 volwassenen + 4 kinderen. Selecteer meer banen!';
+            isValid = false;
           }
         } else {
-          if (peoplePerLane > 8) {
-            warning = '⚠️ Maximaal 8 personen per baan. Selecteer meer banen!';
+          // No kids, so we can have max 8 adults per lane
+          const adultsPerLane = adults / lanes;
+          
+          if (adultsPerLane > 8) {
+            warning = '⚠️ Per baan: max 8 volwassenen. Selecteer meer banen!';
+            isValid = false;
           }
+        }
+        
+        // Total people must be at least 1
+        if (adults + kids === 0) {
+          warning = '⚠️ U moet minimaal 1 persoon opgeven';
+          isValid = false;
         }
         
         if (warning) {

@@ -178,17 +178,36 @@ try {
     
     $assigned_lanes = [];
     
-    // First assign child lanes if needed
-    $child_lanes_array = array_values($child_lanes);
-    for ($i = 0; $i < $child_lanes_needed && $i < count($child_lanes_array); $i++) {
-        $assigned_lanes[] = $child_lanes_array[$i];
-    }
+    // If there are kids in the reservation, automatically prioritize child lanes
+    $has_kids = ($kids > 0);
     
-    // Then assign regular lanes for the remaining
-    $remaining_lanes_needed = $lanes_needed - count($assigned_lanes);
-    $regular_lanes_array = array_values($regular_lanes);
-    for ($i = 0; $i < $remaining_lanes_needed && $i < count($regular_lanes_array); $i++) {
-        $assigned_lanes[] = $regular_lanes_array[$i];
+    if ($has_kids) {
+        // Prioritize child lanes when kids are present
+        // Assign all requested lanes from child lanes first if available
+        $child_lanes_array = array_values($child_lanes);
+        for ($i = 0; $i < $lanes_needed && $i < count($child_lanes_array); $i++) {
+            $assigned_lanes[] = $child_lanes_array[$i];
+        }
+        
+        // If we still need more lanes, use regular lanes
+        $remaining_lanes_needed = $lanes_needed - count($assigned_lanes);
+        $regular_lanes_array = array_values($regular_lanes);
+        for ($i = 0; $i < $remaining_lanes_needed && $i < count($regular_lanes_array); $i++) {
+            $assigned_lanes[] = $regular_lanes_array[$i];
+        }
+    } else {
+        // No kids - use regular lanes first, then child lanes if needed
+        $regular_lanes_array = array_values($regular_lanes);
+        for ($i = 0; $i < $lanes_needed && $i < count($regular_lanes_array); $i++) {
+            $assigned_lanes[] = $regular_lanes_array[$i];
+        }
+        
+        // If we still need more lanes, use child lanes
+        $remaining_lanes_needed = $lanes_needed - count($assigned_lanes);
+        $child_lanes_array = array_values($child_lanes);
+        for ($i = 0; $i < $remaining_lanes_needed && $i < count($child_lanes_array); $i++) {
+            $assigned_lanes[] = $child_lanes_array[$i];
+        }
     }
     
     // Check if we have enough lanes

@@ -583,11 +583,12 @@
         // Check capacity per lane
         // Rule: max 8 adults per lane OR 6 adults + 4 kids per lane
         if (kids > 0) {
-          // We have kids, so we need to validate the 6 adults + 4 kids rule
-          const maxAdultsWithKids = lanes * 6;
-          const maxKids = lanes * 4;
+          // We have kids, so we need to validate the 6 adults + 4 kids rule per lane
+          const adultsPerLane = adults / lanes;
+          const kidsPerLane = kids / lanes;
           
-          if (adults > maxAdultsWithKids || kids > maxKids) {
+          // Check if any lane would exceed 6 adults + 4 kids
+          if (adultsPerLane > 6 || kidsPerLane > 4) {
             warning = '⚠️ Per baan: max 6 volwassenen + 4 kinderen. Selecteer meer banen!';
             isValid = false;
           }
@@ -599,9 +600,9 @@
           }
         } else {
           // No kids, so we can have max 8 adults per lane
-          const maxAdults = lanes * 8;
+          const adultsPerLane = adults / lanes;
           
-          if (adults > maxAdults) {
+          if (adultsPerLane > 8) {
             warning = '⚠️ Per baan: max 8 volwassenen. Selecteer meer banen!';
             isValid = false;
           }
