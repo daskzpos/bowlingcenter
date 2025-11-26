@@ -3,8 +3,15 @@
 ini_set('display_errors', 0);
 error_reporting(E_ALL);
 
+// Start output buffering to prevent any unwanted output
+ob_start();
+
 require_once 'config.php';
 
+// Clear any output that might have been generated
+ob_end_clean();
+
+// Now set the JSON header
 header('Content-Type: application/json');
 
 try {

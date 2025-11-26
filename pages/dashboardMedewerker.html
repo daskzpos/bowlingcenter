@@ -100,119 +100,143 @@
 
       <!-- Vandaag's reserveringen sectie -->
       <div class="bg-gray-800 rounded-xl p-6 shadow-lg mb-8">
-        <h3 class="text-white text-3xl font-bold mb-4">Vandaag's
-          Reserveringen</h3>
-        <p class="text-gray-400 mb-4">Overzicht van alle reserveringen voor
-          vandaag</p>
+        <h3 class="text-white text-3xl font-bold mb-4">Reserveringen van vandaag</h3>
+        <p class="text-gray-400 mb-4">Overzicht van alle reserveringen voor vandaag</p>
 
-        <!-- Voorbeeld reservering 1 -->
-        <div
-          class="bg-gray-700 rounded-lg p-4 mb-3 flex flex-col md:flex-row md:justify-between md:items-center gap-4">
-          <div>
-            <p class="text-white font-semibold">Baan 1 - Jan Jansen</p>
-            <p class="text-gray-400 text-sm">Vandaag, 14:00 - 15:30</p>
-          </div>
-          <div class="flex gap-2">
-            <button
-              class="bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-orange-700 transition">
-              Details
-            </button>
-            <button
-              class="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-green-700 transition">
-              Check-in
-            </button>
-          </div>
-        </div>
-
-        <!-- Voorbeeld reservering 2 -->
-        <div
-          class="bg-gray-700 rounded-lg p-4 mb-3 flex flex-col md:flex-row md:justify-between md:items-center gap-4">
-          <div>
-            <p class="text-white font-semibold">Baan 3 - Lisa de Vries</p>
-            <p class="text-gray-400 text-sm">Vandaag, 16:00 - 17:00</p>
-          </div>
-          <div class="flex gap-2">
-            <button
-              class="bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-orange-700 transition">
-              Details
-            </button>
-            <button
-              class="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-green-700 transition">
-              Check-in
-            </button>
-          </div>
-        </div>
-
-        <!-- Voorbeeld reservering 3 -->
-        <div
-          class="bg-gray-700 rounded-lg p-4 mb-3 flex flex-col md:flex-row md:justify-between md:items-center gap-4">
-          <div>
-            <p class="text-white font-semibold">Baan 5 - Mark Peters</p>
-            <p class="text-gray-400 text-sm">Vandaag, 19:00 - 21:00</p>
-          </div>
-          <div class="flex gap-2">
-            <button
-              class="bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-orange-700 transition">
-              Details
-            </button>
-            <button
-              class="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-green-700 transition">
-              Check-in
-            </button>
-          </div>
+        <div id="today-reservations">
+          <p class="text-gray-400 text-center py-8">Geen reserveringen voor vandaag</p>
         </div>
       </div>
 
       <!-- Aankomende reserveringen sectie -->
       <div class="bg-gray-800 rounded-xl p-6 shadow-lg">
         <h3 class="text-white text-3xl font-bold mb-4">Reserveringen</h3>
-        <h3 class="text-white text-xl font-bold mb-4">Aankomende
-          reserveringen:</h3>
+        <h3 class="text-white text-xl font-bold mb-4">Aankomende reserveringen:</h3>
 
-        <!-- Voorbeeld reservering -->
-        <div
-          class="bg-gray-700 rounded-lg p-4 mb-3 flex flex-col md:flex-row md:justify-between md:items-center gap-4">
-          <div>
-            <p class="text-white font-semibold">Baan 3 - Sophie Bakker</p>
-            <p class="text-gray-400 text-sm">Zaterdag 30 november, 19:00 -
-              21:00</p>
-          </div>
-          <div class="flex gap-2">
-            <button
-              class="bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-orange-700 transition">
-              Details
-            </button>
-            <button
-              class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-700 transition">
-              Bewerken
-            </button>
-            <button
-              class="bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-red-700 transition">
-              Annuleren
-            </button>
-          </div>
+        <div id="upcoming-reservations">
+          <p class="text-gray-400 text-center py-8">Geen aankomende reserveringen</p>
         </div>
 
-        <h3 class="text-white text-xl font-bold mb-4 mt-6">Afgelopen
-          reserveringen:</h3>
+        <h3 class="text-white text-xl font-bold mb-4 mt-6">Afgelopen reserveringen:</h3>
 
-        <div
-          class="bg-gray-700 rounded-lg p-4 mb-3 flex flex-col md:flex-row md:justify-between md:items-center gap-4">
-          <div>
-            <p class="text-white font-semibold">Baan 6 - Tom Hendriks</p>
-            <p class="text-gray-400 text-sm">Zaterdag 12 oktober, 17:00 -
-              18:15</p>
-          </div>
-          <div class="flex gap-2">
-            <button
-              class="bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-orange-700 transition">
-              Details
-            </button>
-          </div>
+        <div id="past-reservations">
+          <p class="text-gray-400 text-center py-8">Geen afgelopen reserveringen</p>
         </div>
       </div>
 
     </div>
+
+    <script>
+      // Load all reservations
+      async function loadReservations() {
+        try {
+          const response = await fetch('/php/getAllReservations.php');
+          const data = await response.json();
+          
+          if (data.success) {
+            // Display today's reservations
+            const todayContainer = document.getElementById('today-reservations');
+            if (data.today && data.today.length > 0) {
+              todayContainer.innerHTML = data.today.map(res => `
+                <div class="bg-gray-700 rounded-lg p-4 mb-3 flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+                  <div>
+                    <p class="text-white font-semibold">Baan ${res.lanes} - ${res.customer_name}</p>
+                    <p class="text-gray-400 text-sm">Vandaag, ${res.start_time.substring(0,5)} - ${res.end_time.substring(0,5)}</p>
+                    <p class="text-gray-400 text-sm">${res.number_of_adults} volwassenen${res.number_of_kids > 0 ? ', ' + res.number_of_kids + ' kinderen' : ''}</p>
+                  </div>
+                  <div class="flex gap-2">
+                    <button class="bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-orange-700 transition">
+                      Details
+                    </button>
+                    <button class="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-green-700 transition">
+                      Check-in
+                    </button>
+                  </div>
+                </div>
+              `).join('');
+            }
+            
+            // Display upcoming reservations
+            const upcomingContainer = document.getElementById('upcoming-reservations');
+            if (data.upcoming && data.upcoming.length > 0) {
+              upcomingContainer.innerHTML = data.upcoming.map(res => `
+                <div class="bg-gray-700 rounded-lg p-4 mb-3 flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+                  <div>
+                    <p class="text-white font-semibold">Baan ${res.lanes} - ${res.customer_name}</p>
+                    <p class="text-gray-400 text-sm">${res.date_formatted}, ${res.start_time.substring(0,5)} - ${res.end_time.substring(0,5)}</p>
+                    <p class="text-gray-400 text-sm">${res.number_of_adults} volwassenen${res.number_of_kids > 0 ? ', ' + res.number_of_kids + ' kinderen' : ''}</p>
+                  </div>
+                  <div class="flex gap-2">
+                    <button class="bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-orange-700 transition">
+                      Details
+                    </button>
+                    <button class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-700 transition">
+                      Bewerken
+                    </button>
+                    <button onclick="cancelReservation(${res.reservation_id})" class="bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-red-700 transition">
+                      Annuleren
+                    </button>
+                  </div>
+                </div>
+              `).join('');
+            }
+            
+            // Display past reservations
+            const pastContainer = document.getElementById('past-reservations');
+            if (data.past && data.past.length > 0) {
+              pastContainer.innerHTML = data.past.map(res => `
+                <div class="bg-gray-700 rounded-lg p-4 mb-3 flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+                  <div>
+                    <p class="text-white font-semibold">Baan ${res.lanes} - ${res.customer_name}</p>
+                    <p class="text-gray-400 text-sm">${res.date_formatted}, ${res.start_time.substring(0,5)} - ${res.end_time.substring(0,5)}</p>
+                    <p class="text-gray-400 text-sm">${res.number_of_adults} volwassenen${res.number_of_kids > 0 ? ', ' + res.number_of_kids + ' kinderen' : ''}</p>
+                  </div>
+                  <div class="flex gap-2">
+                    <button class="bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-orange-700 transition">
+                      Details
+                    </button>
+                  </div>
+                </div>
+              `).join('');
+            }
+          }
+        } catch (error) {
+          console.error('Error loading reservations:', error);
+        }
+      }
+      
+      // Load reservations on page load
+      loadReservations();
+      
+      // Cancel reservation function
+      async function cancelReservation(reservationId) {
+        if (!confirm('Weet u zeker dat u deze reservering wilt annuleren?')) {
+          return;
+        }
+        
+        try {
+          const response = await fetch('/php/deleteReservation.php', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ reservation_id: reservationId })
+          });
+          
+          const result = await response.json();
+          
+          if (result.success) {
+            alert('Reservering succesvol geannuleerd');
+            loadReservations(); // Reload the list
+          } else {
+            alert('Fout bij annuleren: ' + result.message);
+          }
+        } catch (error) {
+          console.error('Error canceling reservation:', error);
+          alert('Er is een fout opgetreden bij het annuleren van de reservering');
+        }
+      }
+    </script>
 
   </body>
 </html>

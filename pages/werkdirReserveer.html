@@ -64,7 +64,25 @@
           Gegevens van de reservering
         </h3>
 
-        <form class="space-y-6">
+        <form id="reservation-form" class="space-y-6">
+          <!-- Guest account option -->
+          <div class="bg-blue-900 bg-opacity-50 border border-blue-600 rounded-lg p-4 mb-4">
+            <div class="flex items-center gap-3 mb-3">
+              <input
+                type="checkbox"
+                id="create-account"
+                class="w-4 h-4 text-orange-600 bg-gray-900 border-gray-700 rounded focus:ring-orange-500"
+              />
+              <label for="create-account" class="text-white font-semibold">
+                Maak een account aan voor deze gast
+              </label>
+            </div>
+            <p class="text-gray-300 text-sm">
+              Als je dit aanvinkt, wordt er automatisch een account aangemaakt voor deze gast. 
+              Ze ontvangen een tijdelijk wachtwoord om in te loggen.
+            </p>
+          </div>
+
           <!-- Klantgegevens -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -132,6 +150,9 @@
                 class="w-full px-4 py-2 rounded-lg bg-gray-900 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500"
                 required
               />
+              <p class="text-xs text-gray-400 mt-1">
+                Ma-Vr: 14:00-22:00 | Za-Zo: 14:00-00:00
+              </p>
             </div>
             <div class="grid grid-cols-2 gap-4">
               <div>
@@ -140,12 +161,23 @@
                   class="block text-gray-300 text-sm mb-1"
                   >Starttijd</label
                 >
-                <input
+                <select
                   id="start-time"
-                  type="time"
                   class="w-full px-4 py-2 rounded-lg bg-gray-900 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500"
                   required
-                />
+                >
+                  <option value="">Selecteer</option>
+                  <option value="14:00">14:00</option>
+                  <option value="15:00">15:00</option>
+                  <option value="16:00">16:00</option>
+                  <option value="17:00">17:00</option>
+                  <option value="18:00">18:00</option>
+                  <option value="19:00">19:00</option>
+                  <option value="20:00">20:00</option>
+                  <option value="21:00">21:00</option>
+                  <option value="22:00" id="opt-22" disabled>22:00 (alleen weekend)</option>
+                  <option value="23:00" id="opt-23" disabled>23:00 (alleen weekend)</option>
+                </select>
               </div>
               <div>
                 <label
@@ -153,13 +185,31 @@
                   class="block text-gray-300 text-sm mb-1"
                   >Eindtijd</label
                 >
-                <input
+                <select
                   id="end-time"
-                  type="time"
                   class="w-full px-4 py-2 rounded-lg bg-gray-900 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500"
                   required
-                />
+                >
+                  <option value="">Selecteer</option>
+                  <option value="15:00">15:00</option>
+                  <option value="16:00">16:00</option>
+                  <option value="17:00">17:00</option>
+                  <option value="18:00">18:00</option>
+                  <option value="19:00">19:00</option>
+                  <option value="20:00">20:00</option>
+                  <option value="21:00">21:00</option>
+                  <option value="22:00">22:00</option>
+                  <option value="23:00" id="optend-23" disabled>23:00 (alleen weekend)</option>
+                  <option value="00:00" id="optend-00" disabled>00:00 (alleen weekend)</option>
+                </select>
               </div>
+            </div>
+            
+            <!-- Magic Bowling Notice -->
+            <div id="magic-bowling-notice" class="hidden col-span-2 bg-purple-900 bg-opacity-50 border border-purple-500 rounded-lg p-3">
+              <p class="text-purple-200 text-sm flex items-center gap-2">
+                ✨ <strong>Magic Bowling!</strong> In het weekend van 22:00-00:00 bowlen alle banen met speciale verlichting en effecten!
+              </p>
             </div>
 
             <div>
@@ -170,26 +220,51 @@
                 id="lanes"
                 class="w-full px-4 py-2 rounded-lg bg-gray-900 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500"
               >
-                <option>1 baan</option>
-                <option>2 banen</option>
-                <option>3 banen</option>
-                <option>4 banen</option>
-                <option>5+ banen (groep)</option>
+                <option value="1">1 baan</option>
+                <option value="2">2 banen</option>
+                <option value="3">3 banen</option>
+                <option value="4">4 banen</option>
+                <option value="5">5 banen</option>
+                <option value="6">6 banen</option>
+                <option value="7">7 banen</option>
+                <option value="8">8 banen (hele bowlingbaan!)</option>
               </select>
+              <p class="text-xs text-gray-400 mt-1">
+                Max 8 personen per baan
+              </p>
             </div>
 
             <div>
-              <label for="people" class="block text-gray-300 text-sm mb-1"
+              <label class="block text-gray-300 text-sm mb-1"
                 >Aantal personen</label
               >
-              <input
-                id="people"
-                type="number"
-                min="1"
-                max="50"
-                value="4"
-                class="w-full px-4 py-2 rounded-lg bg-gray-900 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500"
-              />
+              <div class="grid grid-cols-2 gap-2">
+                <div>
+                  <label for="adults" class="text-xs text-gray-400">Volwassenen</label>
+                  <input
+                    id="adults"
+                    type="number"
+                    min="0"
+                    max="64"
+                    value="4"
+                    class="w-full px-4 py-2 rounded-lg bg-gray-900 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  />
+                </div>
+                <div>
+                  <label for="kids" class="text-xs text-gray-400">Kinderen</label>
+                  <input
+                    id="kids"
+                    type="number"
+                    min="0"
+                    max="32"
+                    value="0"
+                    class="w-full px-4 py-2 rounded-lg bg-gray-900 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  />
+                </div>
+              </div>
+              <p id="capacity-warning" class="text-xs text-yellow-400 mt-1 hidden">
+                ⚠️ Let op capaciteit per baan
+              </p>
             </div>
           </div>
 
@@ -199,24 +274,19 @@
               <span class="block text-gray-300 text-sm mb-2">Extra's</span>
               <div class="space-y-2">
                 <label class="flex items-center gap-2 text-gray-300 text-sm">
-                  <input
-                    type="checkbox"
-                    class="rounded bg-gray-900 border-gray-600 text-orange-500 focus:ring-orange-500"
-                  />
-                  Schoenen inbegrepen
+                  <input type="checkbox" class="rounded bg-gray-900 border-gray-600 text-orange-500 focus:ring-orange-500" />
+                  Snackpakket basis
                 </label>
                 <label class="flex items-center gap-2 text-gray-300 text-sm">
-                  <input
-                    type="checkbox"
-                    class="rounded bg-gray-900 border-gray-600 text-orange-500 focus:ring-orange-500"
-                  />
-                  Drankarrangement
+                  <input type="checkbox" class="rounded bg-gray-900 border-gray-600 text-orange-500 focus:ring-orange-500" />
+                  Snackpakket luxe
                 </label>
                 <label class="flex items-center gap-2 text-gray-300 text-sm">
-                  <input
-                    type="checkbox"
-                    class="rounded bg-gray-900 border-gray-600 text-orange-500 focus:ring-orange-500"
-                  />
+                  <input type="checkbox" class="rounded bg-gray-900 border-gray-600 text-orange-500 focus:ring-orange-500" />
+                  Vrijgezellenfeest
+                </label>
+                <label class="flex items-center gap-2 text-gray-300 text-sm">
+                  <input type="checkbox" class="rounded bg-gray-900 border-gray-600 text-orange-500 focus:ring-orange-500" />
                   Kinderfeestje pakket
                 </label>
               </div>
@@ -263,7 +333,8 @@
               </a>
               <button
                 type="submit"
-                class="px-6 py-2 rounded-lg bg-orange-600 text-white text-sm font-semibold hover:bg-orange-700 transition"
+                id="submit-btn"
+                class="px-6 py-2 rounded-lg bg-orange-600 text-white text-sm font-semibold hover:bg-orange-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Reservering opslaan
               </button>
@@ -277,10 +348,9 @@
         class="bg-gray-800 rounded-2xl p-5 shadow-lg flex flex-col md:flex-row md:items-center md:justify-between gap-4"
       >
         <div>
-          <h4 class="text-white font-semibold mb-1">Openingstijden</h4>
+          <h4 class="text-white font-semibold mb-1">Openingstijden &amp; Prijzen</h4>
           <p class="text-gray-400 text-sm">
-            Ma t/m do: 12:00 – 23:00 · Vr: 12:00 – 01:00 · Za: 10:00 – 01:00 ·
-            Zo: 10:00 – 22:00
+            Ma-Do: 14:00-22:00 (€24/uur per baan) · Vr-Zo: 14:00-18:00 (€28/uur) · Vr-Zo: 18:00-00:00 (€33,50/uur)
           </p>
         </div>
         <div class="text-sm text-gray-300">
@@ -307,12 +377,13 @@
       // Simpele indicatieve prijsberekening
       const startInput = document.getElementById("start-time");
       const endInput = document.getElementById("end-time");
+      const dateInput = document.getElementById("date");
       const lanesInput = document.getElementById("lanes");
       const durationEl = document.getElementById("duration");
       const priceEl = document.getElementById("price");
 
       function updatePrice() {
-        if (!startInput.value || !endInput.value) {
+        if (!startInput.value || !endInput.value || !dateInput.value) {
           durationEl.textContent = "–";
           priceEl.textContent = "€ 0,00";
           return;
@@ -327,9 +398,29 @@
           return;
         }
 
+        // Get day of week from selected date
+        const selectedDate = new Date(dateInput.value);
+        const dayOfWeek = selectedDate.getDay(); // 0 = Sunday, 6 = Saturday
+        
+        // Determine pricing based on day and time
+        let pricePerLanePerHour;
+        
+        // Monday (1) to Thursday (4) = €24 per hour
+        if (dayOfWeek >= 1 && dayOfWeek <= 4) {
+          pricePerLanePerHour = 24;
+        } 
+        // Friday (5), Saturday (6), Sunday (0)
+        else {
+          // Check if booking is before or after 18:00
+          if (sh < 18) {
+            pricePerLanePerHour = 28; // 14:00-18:00 = €28
+          } else {
+            pricePerLanePerHour = 33.50; // 18:00-00:00 = €33.50
+          }
+        }
+
         const lanesFactor = parseInt(lanesInput.value) || 1;
-        const basePerLanePerHour = 22.5; // voorbeeldprijs
-        const price = duration * lanesFactor * basePerLanePerHour;
+        const price = duration * lanesFactor * pricePerLanePerHour;
 
         durationEl.textContent = duration.toFixed(1) + " uur";
         priceEl.textContent = "€ " + price.toFixed(2).replace(".", ",");
@@ -338,6 +429,223 @@
       startInput?.addEventListener("change", updatePrice);
       endInput?.addEventListener("change", updatePrice);
       lanesInput?.addEventListener("change", updatePrice);
+      dateInput.addEventListener('change', updatePrice);
+      
+      // Date change handler - enable/disable time slots based on weekend
+      dateInput.addEventListener('change', function() {
+        const selectedDate = new Date(this.value);
+        const dayOfWeek = selectedDate.getDay();
+        const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
+        
+        document.getElementById('opt-22').disabled = !isWeekend;
+        document.getElementById('opt-23').disabled = !isWeekend;
+        document.getElementById('optend-23').disabled = !isWeekend;
+        document.getElementById('optend-00').disabled = !isWeekend;
+        
+        checkMagicBowling();
+      });
+      
+      // Check for Magic Bowling time
+      function checkMagicBowling() {
+        const dateVal = dateInput.value;
+        const startVal = startInput.value;
+        
+        if (!dateVal || !startVal) return;
+        
+        const selectedDate = new Date(dateVal);
+        const dayOfWeek = selectedDate.getDay();
+        const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
+        const startHour = parseInt(startVal.split(':')[0]);
+        
+        const magicNotice = document.getElementById('magic-bowling-notice');
+        if (isWeekend && startHour >= 22) {
+          magicNotice.classList.remove('hidden');
+        } else {
+          magicNotice.classList.add('hidden');
+        }
+      }
+      
+      startInput.addEventListener('change', checkMagicBowling);
+      
+      // Capacity validation
+      const adultsInput = document.getElementById('adults');
+      const kidsInput = document.getElementById('kids');
+      const capacityWarning = document.getElementById('capacity-warning');
+      
+      function validateCapacity() {
+        const adults = parseInt(adultsInput.value) || 0;
+        const kids = parseInt(kidsInput.value) || 0;
+        const lanes = parseInt(lanesInput.value) || 1;
+        const isKinderpartij = document.getElementById('kinderpartij')?.checked || false;
+        
+        let isValid = true;
+        let warning = '';
+        
+        // Check capacity per lane
+        // Rule: max 8 adults per lane OR 6 adults + 4 kids per lane
+        if (kids > 0) {
+          // We have kids, so we need to validate the 6 adults + 4 kids rule per lane
+          const adultsPerLane = adults / lanes;
+          const kidsPerLane = kids / lanes;
+          
+          // Check if any lane would exceed 6 adults + 4 kids
+          if (adultsPerLane > 6 || kidsPerLane > 4) {
+            warning = '⚠️ Per baan: max 6 volwassenen + 4 kinderen. Selecteer meer banen!';
+            isValid = false;
+          }
+        } else {
+          // No kids, so we can have max 8 adults per lane
+          const adultsPerLane = adults / lanes;
+          
+          if (adultsPerLane > 8) {
+            warning = '⚠️ Per baan: max 8 volwassenen. Selecteer meer banen!';
+            isValid = false;
+          }
+        }
+        
+        // Total people must be at least 1
+        if (adults + kids === 0) {
+          warning = '⚠️ U moet minimaal 1 persoon opgeven';
+          isValid = false;
+        }
+        
+        if (warning) {
+          capacityWarning.textContent = warning;
+          capacityWarning.classList.remove('hidden');
+        } else {
+          capacityWarning.classList.add('hidden');
+        }
+        
+        updatePrice();
+      }
+      
+      adultsInput.addEventListener('input', validateCapacity);
+      kidsInput.addEventListener('input', validateCapacity);
+      lanesInput.addEventListener('change', validateCapacity);
+      document.getElementById('kinderpartij')?.addEventListener('change', validateCapacity);
+      
+      // Set minimum date to today
+      const today = new Date().toISOString().split('T')[0];
+      dateInput.setAttribute('min', today);
+      
+      // Handle form submission with guest account creation
+      const form = document.getElementById('reservation-form');
+      const submitBtn = document.getElementById('submit-btn');
+      const createAccountCheckbox = document.getElementById('create-account');
+      
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Bezig met opslaan...';
+        
+        let guestUserId = null;
+        let tempPassword = null;
+        
+        // If create account is checked, create guest account first
+        if (createAccountCheckbox.checked) {
+          try {
+            const guestData = {
+              first_name: document.getElementById('first-name').value,
+              last_name: document.getElementById('last-name').value,
+              email: document.getElementById('email').value,
+              phone_number: document.getElementById('phone').value
+            };
+            
+            const guestResponse = await fetch('/php/createGuestAccount.php', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(guestData)
+            });
+            
+            const guestResult = await guestResponse.json();
+            
+            if (guestResult.success) {
+              guestUserId = guestResult.user_id;
+              tempPassword = guestResult.temp_password;
+              console.log('Guest account created with ID:', guestUserId);
+            } else {
+              alert('Fout bij aanmaken gastaccount: ' + guestResult.message);
+              submitBtn.disabled = false;
+              submitBtn.textContent = 'Reservering opslaan';
+              return;
+            }
+          } catch (error) {
+            console.error('Error creating guest account:', error);
+            alert('Er is een fout opgetreden bij het aanmaken van het gastaccount.');
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Reservering opslaan';
+            return;
+          }
+        }
+        
+        // Collect form data
+        const formData = {
+          first_name: document.getElementById('first-name').value,
+          last_name: document.getElementById('last-name').value,
+          email: document.getElementById('email').value,
+          phone_number: document.getElementById('phone').value,
+          date: document.getElementById('date').value,
+          start_time: document.getElementById('start-time').value,
+          end_time: document.getElementById('end-time').value,
+          lanes: parseInt(document.getElementById('lanes').value),
+          adults: parseInt(document.getElementById('adults').value) || 0,
+          kids: parseInt(document.getElementById('kids').value) || 0,
+          people: (parseInt(document.getElementById('adults').value) || 0) + (parseInt(document.getElementById('kids').value) || 0),
+          snackpakket_basis: document.getElementById('snackpakket-basis')?.checked || false,
+          snackpakket_luxe: document.getElementById('snackpakket-luxe')?.checked || false,
+          vrijgezellenfeest: document.getElementById('vrijgezellenfeest')?.checked || false,
+          kinderpartij: document.getElementById('kinderpartij')?.checked || false,
+          notes: document.getElementById('notes').value
+        };
+        
+        // Validate total people
+        if (formData.people === 0) {
+          alert('U moet minimaal 1 persoon opgeven (volwassenen of kinderen)');
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Reservering opslaan';
+          return;
+        }
+        
+        // Add guest user ID if account was created
+        if (guestUserId) {
+          formData.guest_user_id = guestUserId;
+        }
+        
+        try {
+          const response = await fetch('/php/makeReservation.php', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+          });
+          
+          const result = await response.json();
+          
+          if (result.success) {
+            let message = 'Reservering succesvol aangemaakt! Reserveringsnummer: ' + result.reservation_id;
+            
+            if (tempPassword) {
+              message += '\n\nEen account is aangemaakt voor de gast.\nTijdelijk wachtwoord: ' + tempPassword + '\n\nDeel dit wachtwoord met de gast.';
+            }
+            
+            alert(message);
+            window.location.href = '/pages/dashboardMedewerker.html';
+          } else {
+            alert('Fout bij aanmaken reservering: ' + result.message);
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Reservering opslaan';
+          }
+        } catch (error) {
+          console.error('Error submitting reservation:', error);
+          alert('Er is een fout opgetreden. Probeer het later opnieuw.');
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Reservering opslaan';
+        }
+      });
     </script>
   </body>
 </html>
