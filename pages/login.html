@@ -32,8 +32,11 @@
       <h1 class="text-white text-4xl font-bold mb-2 text-center">Welkom terug</h1>
       <p class="text-gray-300 text-center mb-8">Log in bij Brooklyn Bowl</p>
       
+      <!-- Message display -->
+      <div id="message" class="hidden mb-4 p-3 rounded-lg text-white text-center"></div>
+      
       <!-- Login form -->
-      <form class="space-y-6">
+      <form id="loginForm" class="space-y-6">
         
         <!-- Email input -->
         <div>
@@ -43,6 +46,7 @@
           <input 
             type="email" 
             id="email"
+            name="email"
             class="w-full px-4 py-3 rounded-lg bg-white bg-opacity-20 text-white placeholder-gray-300 border border-white border-opacity-30 focus:outline-none focus:ring-2 focus:ring-orange-500 transition"
             placeholder="henk-jan@email.com"
             required
@@ -57,6 +61,7 @@
           <input 
             type="password" 
             id="password"
+            name="wachtwoord"
             class="w-full px-4 py-3 rounded-lg bg-white bg-opacity-20 text-white placeholder-gray-300 border border-white border-opacity-30 focus:outline-none focus:ring-2 focus:ring-orange-500 transition"
             placeholder="••••••••"
             required
@@ -67,12 +72,77 @@
         <!-- Login button -->
         <button 
           type="submit"
+          id="submitBtn"
           class="w-full bg-orange-600 text-white py-3 rounded-lg font-semibold hover:bg-orange-700 transition shadow-lg"
         >
           Inloggen
         </button>
         
       </form>
+      
+      <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+          e.preventDefault();
+          
+          const submitBtn = document.getElementById('submitBtn');
+          const messageDiv = document.getElementById('message');
+          const email = document.getElementById('email').value;
+          const wachtwoord = document.getElementById('password').value;
+          
+          submitBtn.disabled = true;
+          submitBtn.textContent = 'Bezig met inloggen...';
+          
+          try {
+            const response = await fetch('/php/login.php', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ email, wachtwoord })
+            });
+            
+            // Check if response is ok
+            if (!response.ok) {
+              throw new Error(`Server error: ${response.status} - ${response.statusText}`);
+            }
+            
+            const contentType = response.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/json')) {
+              const text = await response.text();
+              console.error('Response was not JSON:', text);
+              throw new Error('Server returned invalid response. Check console for details.');
+            }
+            
+            const data = await response.json();
+            
+            if (data.success) {
+              messageDiv.className = 'mb-4 p-3 rounded-lg text-white text-center bg-green-600';
+              messageDiv.textContent = data.message;
+              messageDiv.classList.remove('hidden');
+              
+              // Redirect after 1 second
+              setTimeout(() => {
+                window.location.href = data.redirect;
+              }, 1000);
+            } else {
+              messageDiv.className = 'mb-4 p-3 rounded-lg text-white text-center bg-red-600';
+              messageDiv.textContent = data.message;
+              messageDiv.classList.remove('hidden');
+              
+              submitBtn.disabled = false;
+              submitBtn.textContent = 'Inloggen';
+            }
+          } catch (error) {
+            console.error('Login error:', error);
+            messageDiv.className = 'mb-4 p-3 rounded-lg text-white text-center bg-red-600';
+            messageDiv.textContent = error.message || 'Er is een fout opgetreden. Probeer het opnieuw.';
+            messageDiv.classList.remove('hidden');
+            
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Inloggen';
+          }
+        });
+      </script>
       
       <!-- Aanmelden link -->
       <p class="text-gray-300 text-center mt-6">
