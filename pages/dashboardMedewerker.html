@@ -54,21 +54,7 @@
       <!-- Dashboard cards (3 kolommen voor medewerker) -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
 
-        <!-- Card 1: Alle Reserveringen -->
-        <div
-          class="bg-gray-800 rounded-xl p-6 shadow-lg hover:shadow-2xl transition">
-          <div class="flex items-center justify-between mb-4">
-            <h3 class="text-white text-xl font-bold">Alle Reserveringen</h3>
-            <span class="text-4xl">📋</span>
-          </div>
-          <p class="text-gray-400 mb-4">Bekijk en beheer alle reserveringen</p>
-          <button
-            class="w-full bg-orange-600 text-white py-2 rounded-lg font-semibold hover:bg-orange-700 transition">
-            Bekijken
-          </button>
-        </div>
-
-        <!-- Card 2: Klanten Beheren -->
+        <!-- Card 1: Klanten Beheren -->
         <div
           class="bg-gray-800 rounded-xl p-6 shadow-lg hover:shadow-2xl transition">
           <div class="flex items-center justify-between mb-4">
@@ -82,7 +68,7 @@
           </a>
         </div>
 
-        <!-- Card 3: Banen Overzicht -->
+        <!-- Card 2: Banen Overzicht -->
         <div
           class="bg-gray-800 rounded-xl p-6 shadow-lg hover:shadow-2xl transition">
           <div class="flex items-center justify-between mb-4">
@@ -93,6 +79,18 @@
          <a href="/pages/banenOverzicht.html"
             class="w-full inline-block bg-orange-600 text-white py-2 rounded-lg font-semibold text-center hover:bg-orange-700 transition">
             Overzicht
+          </a>
+        </div>
+
+        <!-- Card 3: Scores invoeren -->
+        <div class="bg-gray-800 rounded-xl p-6 shadow-lg hover:shadow-2xl transition">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-white text-xl font-bold">Scores invoeren</h3>
+            <span class="text-4xl">📝</span>
+          </div>
+          <p class="text-gray-400 mb-4">Voer namen en scores van deelnemers in</p>
+          <a href="/pages/scoresInvoeren.html" class="w-full inline-block bg-orange-600 text-white py-2 rounded-lg font-semibold text-center hover:bg-orange-700 transition">
+            Scores invoeren
           </a>
         </div>
 
@@ -144,14 +142,6 @@
                     <p class="text-gray-400 text-sm">Vandaag, ${res.start_time.substring(0,5)} - ${res.end_time.substring(0,5)}</p>
                     <p class="text-gray-400 text-sm">${res.number_of_adults} volwassenen${res.number_of_kids > 0 ? ', ' + res.number_of_kids + ' kinderen' : ''}</p>
                   </div>
-                  <div class="flex gap-2">
-                    <button class="bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-orange-700 transition">
-                      Details
-                    </button>
-                    <button class="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-green-700 transition">
-                      Check-in
-                    </button>
-                  </div>
                 </div>
               `).join('');
             }
@@ -167,12 +157,6 @@
                     <p class="text-gray-400 text-sm">${res.number_of_adults} volwassenen${res.number_of_kids > 0 ? ', ' + res.number_of_kids + ' kinderen' : ''}</p>
                   </div>
                   <div class="flex gap-2">
-                    <button class="bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-orange-700 transition">
-                      Details
-                    </button>
-                    <button class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-700 transition">
-                      Bewerken
-                    </button>
                     <button onclick="cancelReservation(${res.reservation_id})" class="bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-red-700 transition">
                       Annuleren
                     </button>
@@ -190,11 +174,6 @@
                     <p class="text-white font-semibold">Baan ${res.lanes} - ${res.customer_name}</p>
                     <p class="text-gray-400 text-sm">${res.date_formatted}, ${res.start_time.substring(0,5)} - ${res.end_time.substring(0,5)}</p>
                     <p class="text-gray-400 text-sm">${res.number_of_adults} volwassenen${res.number_of_kids > 0 ? ', ' + res.number_of_kids + ' kinderen' : ''}</p>
-                  </div>
-                  <div class="flex gap-2">
-                    <button class="bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-orange-700 transition">
-                      Details
-                    </button>
                   </div>
                 </div>
               `).join('');

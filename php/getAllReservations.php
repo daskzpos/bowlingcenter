@@ -34,8 +34,41 @@ try {
     $stmt->execute();
     $result = $stmt->get_result();
     
+    $days_nl = [
+        'Monday' => 'Maandag',
+        'Tuesday' => 'Dinsdag',
+        'Wednesday' => 'Woensdag',
+        'Thursday' => 'Donderdag',
+        'Friday' => 'Vrijdag',
+        'Saturday' => 'Zaterdag',
+        'Sunday' => 'Zondag'
+    ];
+    $months_nl = [
+        'January' => 'januari',
+        'February' => 'februari',
+        'March' => 'maart',
+        'April' => 'april',
+        'May' => 'mei',
+        'June' => 'juni',
+        'July' => 'juli',
+        'August' => 'augustus',
+        'September' => 'september',
+        'October' => 'oktober',
+        'November' => 'november',
+        'December' => 'december'
+    ];
+    
     $today = [];
     while ($row = $result->fetch_assoc()) {
+        $date = new DateTime($row['date']);
+        $formatted = $date->format('l j F Y');
+        foreach ($days_nl as $en => $nl) {
+            $formatted = str_replace($en, $nl, $formatted);
+        }
+        foreach ($months_nl as $en => $nl) {
+            $formatted = str_replace($en, $nl, $formatted);
+        }
+        $row['date_formatted'] = $formatted;
         $row['customer_name'] = $row['first_name'] . ' ' . $row['last_name'];
         $row['lanes'] = $row['lanes'] ?? 'Geen banen toegewezen';
         $today[] = $row;
