@@ -1,0 +1,86 @@
+
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Mijn Scores</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900">
+    <!-- Navigation bar -->
+    <nav class="bg-black bg-opacity-80 backdrop-blur-lg shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo/Titel -->
+                <div class="flex items-center">
+                    <h1 class="text-white text-2xl font-bold">Brooklyn Bowl</h1>
+                </div>
+                <!-- Rechts: Welkom + Uitloggen -->
+                <div class="flex items-center gap-4">
+                    <span class="text-gray-300">Welkom, <span class="text-orange-400 font-semibold">Gebruiker</span></span>
+                    <a href="login.html" class="bg-orange-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-orange-700 transition">
+                        Uitloggen
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="bg-gradient-to-r from-orange-600 to-orange-500 rounded-2xl p-8 mb-8 shadow-xl">
+            <h2 class="text-white text-4xl font-bold mb-2">Mijn Scores</h2>
+            <p class="text-white text-lg">Bekijk hier je bowlingstatistieken van eerdere sessies.</p>
+        </div>
+
+        <div class="max-w-4xl mx-auto">
+            <div class="bg-gray-800 rounded-xl p-6 shadow-lg">
+                <h3 class="text-white text-2xl font-bold mb-4">Overzicht van jouw scores</h3>
+                <div id="scores-list">
+                    <!-- Hier komen de scores van de gebruiker -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Ophalen en tonen van scores vanuit backend
+        document.addEventListener('DOMContentLoaded', async function() {
+            const scoresList = document.getElementById('scores-list');
+            console.log('Page loaded, fetching scores...');
+            try {
+                const response = await fetch('/php/getUserScores.php');
+                console.log('Response status:', response.status);
+                const result = await response.json();
+                console.log('Full result:', result);
+                console.log('Debug info:', result.debug);
+                console.log('Scores array:', result.scores);
+                console.log('Number of scores:', result.scores ? result.scores.length : 0);
+                
+                if (result.success && result.scores.length > 0) {
+                    result.scores.forEach(session => {
+                        const sessionDiv = document.createElement('div');
+                        sessionDiv.classList.add('score-session', 'mb-6', 'bg-gray-700', 'rounded-lg', 'p-4', 'shadow');
+                        sessionDiv.innerHTML = `<h4 class='text-white text-lg font-semibold mb-2'>Sessie op ${session.reservationDate} (${session.start_time} - ${session.end_time})</h4>`;
+                        const table = document.createElement('table');
+                        table.className = 'w-full text-left text-gray-300 mb-2';
+                        table.innerHTML = `<tr><th class='py-2'>Naam</th><th class='py-2'>Score</th></tr>`;
+                        session.players.forEach(player => {
+                            table.innerHTML += `<tr><td class='py-1'>${player.player_name}</td><td class='py-1'>${player.score}</td></tr>`;
+                        });
+                        sessionDiv.appendChild(table);
+                        scoresList.appendChild(sessionDiv);
+                    });
+                } else {
+                    console.log('No scores found, showing message');
+                    scoresList.innerHTML = '<p class="text-gray-400 text-center py-8">Geen scores gevonden</p>';
+                }
+            } catch (err) {
+                console.error('Error loading scores:', err);
+                scoresList.innerHTML = '<p class="text-red-400 text-center py-8">Fout bij het laden van scores: ' + err.message + '</p>';
+            }
+        });
+    </script>
+</body>
+</html>

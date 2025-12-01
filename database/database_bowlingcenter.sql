@@ -17,9 +17,6 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 CREATE SCHEMA IF NOT EXISTS `bowlingcenter` DEFAULT CHARACTER SET utf8mb4 ;
 USE `bowlingcenter` ;
 
--- -----------------------------------------------------
--- Table `bowlingcenter`.`users`
--- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `bowlingcenter`.`users` (
   `id` INT(10) UNSIGNED NOT NULL,
   `first_name` VARCHAR(150) NOT NULL,
@@ -58,9 +55,6 @@ DEFAULT CHARACTER SET = utf8mb4;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `bowlingcenter`.`employee` (
   `id` INT(10) UNSIGNED NOT NULL,
-  `first_name` VARCHAR(150) NOT NULL,
-  `last_name` VARCHAR(150) NOT NULL,
-  `email` VARCHAR(150) NOT NULL,
   `password_hash` VARCHAR(45) NOT NULL,
   `phone_number` INT NOT NULL,
   `role` VARCHAR(150) NOT NULL,

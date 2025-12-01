@@ -61,9 +61,9 @@
           <span class="text-4xl">🏆</span>
         </div>
         <p class="text-gray-400 mb-4">Bekijk je bowlingstatistieken</p>
-        <button class="w-full bg-orange-600 text-white py-2 rounded-lg font-semibold hover:bg-orange-700 transition">
-          Statistieken
-        </button>
+        <a href="/pages/mijnScores.html" class="w-full inline-block bg-orange-600 text-white py-2 rounded-lg font-semibold text-center hover:bg-orange-700 transition">
+          Mijn Scores
+        </a>
       </div>
 
     </div>
@@ -105,9 +105,6 @@
                   <p class="text-gray-400 text-sm">${res.number_of_adults} volwassenen${res.number_of_kids > 0 ? ', ' + res.number_of_kids + ' kinderen' : ''}</p>
                 </div>
                 <div class="flex gap-2">
-                  <button class="bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-orange-700 transition">
-                    Details
-                  </button>
                   <button onclick="cancelReservation(${res.reservation_id})" class="bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-red-700 transition">  
                     Annuleren  
                   </button>
@@ -126,11 +123,7 @@
                   <p class="text-gray-400 text-sm">${res.date_formatted}, ${res.start_time} - ${res.end_time}</p>
                   <p class="text-gray-400 text-sm">${res.number_of_adults} volwassenen${res.number_of_kids > 0 ? ', ' + res.number_of_kids + ' kinderen' : ''}</p>
                 </div>
-                <div class="flex gap-2">
-                  <button class="bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-orange-700 transition">
-                    Details
-                  </button>
-                </div>
+
               </div>
             `).join('');
           }
