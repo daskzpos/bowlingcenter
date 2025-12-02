@@ -145,7 +145,45 @@
 
     </div>
 
+    <!-- Edit Reservation Modal -->
+    <div id="editModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div class="bg-gray-800 rounded-xl p-6 max-w-md w-full mx-4">
+        <h3 class="text-white text-2xl font-bold mb-4">Reservering Bewerken</h3>
+        
+        <div class="mb-4">
+          <label class="block text-gray-300 mb-2">Begintijd</label>
+          <input type="time" id="editStartTime" class="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500">
+        </div>
+        
+        <div class="mb-4">
+          <label class="block text-gray-300 mb-2">Eindtijd</label>
+          <input type="time" id="editEndTime" class="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500">
+        </div>
+        
+        <div class="mb-4">
+          <label class="block text-gray-300 mb-2">Aantal Volwassenen</label>
+          <input type="number" id="editAdults" min="1" class="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500">
+        </div>
+        
+        <div class="mb-6">
+          <label class="block text-gray-300 mb-2">Aantal Kinderen</label>
+          <input type="number" id="editKids" min="0" class="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500">
+        </div>
+        
+        <div class="flex gap-3">
+          <button onclick="closeEditModal()" class="flex-1 bg-gray-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-gray-700 transition">
+            Annuleren
+          </button>
+          <button onclick="saveReservation()" class="flex-1 bg-orange-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-orange-700 transition">
+            Opslaan
+          </button>
+        </div>
+      </div>
+    </div>
+
     <script>
+      let currentReservationId = null;
+      
       // Load all reservations
       async function loadReservations() {
         try {
@@ -180,10 +218,7 @@
                     <p class="text-gray-400 text-sm">${res.number_of_adults} volwassenen${res.number_of_kids > 0 ? ', ' + res.number_of_kids + ' kinderen' : ''}</p>
                   </div>
                   <div class="flex gap-2">
-                    <button class="bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-orange-700 transition">
-                      Details
-                    </button>
-                    <button class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-700 transition">
+                    <button onclick="editReservation(${res.reservation_id}, '${res.start_time}', '${res.end_time}', ${res.number_of_adults}, ${res.number_of_kids})" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-700 transition">
                       Bewerken
                     </button>
                     <button onclick="cancelReservation(${res.reservation_id})" class="bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-red-700 transition">
@@ -242,6 +277,86 @@
         } catch (error) {
           console.error('Error canceling reservation:', error);
           alert('Er is een fout opgetreden bij het annuleren van de reservering');
+        }
+      }
+      
+      // Edit reservation function
+      function editReservation(reservationId, startTime, endTime, adults, kids) {
+        currentReservationId = reservationId;
+        
+        // Remove seconds from time if present
+        const formatTime = (time) => time.substring(0, 5);
+        
+        document.getElementById('editStartTime').value = formatTime(startTime);
+        document.getElementById('editEndTime').value = formatTime(endTime);
+        document.getElementById('editAdults').value = adults;
+        document.getElementById('editKids').value = kids;
+        
+        document.getElementById('editModal').classList.remove('hidden');
+      }
+      
+      // Close edit modal
+      function closeEditModal() {
+        document.getElementById('editModal').classList.add('hidden');
+        currentReservationId = null;
+      }
+      
+      // Save updated reservation
+      async function saveReservation() {
+        const startTime = document.getElementById('editStartTime').value + ':00';
+        const endTime = document.getElementById('editEndTime').value + ':00';
+        const adults = parseInt(document.getElementById('editAdults').value);
+        const kids = parseInt(document.getElementById('editKids').value);
+        
+        // Validate input
+        if (!startTime || !endTime) {
+          alert('Vul alle velden in');
+          return;
+        }
+        
+        if (adults < 1) {
+          alert('Er moet minimaal 1 volwassene zijn');
+          return;
+        }
+        
+        if (kids < 0) {
+          alert('Aantal kinderen kan niet negatief zijn');
+          return;
+        }
+        
+        // Validate time order
+        if (startTime >= endTime) {
+          alert('Begintijd moet voor eindtijd zijn');
+          return;
+        }
+        
+        try {
+          const response = await fetch('/php/updateReservation.php', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              reservation_id: currentReservationId,
+              start_time: startTime,
+              end_time: endTime,
+              number_of_adults: adults,
+              number_of_kids: kids
+            })
+          });
+          
+          const result = await response.json();
+          
+          if (result.success) {
+            alert('Reservering succesvol bijgewerkt');
+            closeEditModal();
+            loadReservations(); // Reload the list
+          } else {
+            alert('Fout bij bewerken: ' + result.message);
+          }
+        } catch (error) {
+          console.error('Error updating reservation:', error);
+          alert('Er is een fout opgetreden bij het bijwerken van de reservering');
         }
       }
     </script>  </body>

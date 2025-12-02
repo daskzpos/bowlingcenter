@@ -37,11 +37,11 @@
             <option value="">Laden...</option>
           </select>
         </div>
+        <div id="reservationInfo" class="mb-4 hidden">
+          <p class="text-gray-300 text-sm"></p>
+        </div>
         <div id="participants">
-          <div class="flex gap-4 mb-2">
-            <input type="text" name="player_name[]" placeholder="Naam deelnemer" class="px-4 py-2 rounded-lg bg-gray-700 text-white w-2/3" required>
-            <input type="number" name="score[]" placeholder="Score" class="px-4 py-2 rounded-lg bg-gray-700 text-white w-1/3" required>
-          </div>
+          <!-- Participant fields will be generated here -->
         </div>
         <button type="button" id="addParticipant" class="bg-orange-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-orange-700 transition mb-4">+ Deelnemer toevoegen</button>
         <button type="submit" class="w-full bg-orange-600 text-white py-2 rounded-lg font-semibold hover:bg-orange-700 transition">Scores opslaan</button>
@@ -52,6 +52,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', async function () {
+        let reservationsData = [];
 
         // --- Deelnemer toevoegen ---
         document.getElementById('addParticipant').addEventListener('click', function () {
@@ -62,6 +63,49 @@
       <input type="number" name="score[]" placeholder="Score" class="px-4 py-2 rounded-lg bg-gray-700 text-white w-1/3" required>
     `;
             document.getElementById('participants').appendChild(div);
+        });
+
+        // --- Generate participant fields based on reservation ---
+        function generateParticipantFields(adults, kids) {
+            const participantsDiv = document.getElementById('participants');
+            participantsDiv.innerHTML = '';
+            
+            const total = adults + kids;
+            
+            for (let i = 0; i < total; i++) {
+                const div = document.createElement('div');
+                div.className = 'flex gap-4 mb-2';
+                const label = i < adults ? 'Volwassene' : 'Kind';
+                const number = i < adults ? (i + 1) : (i - adults + 1);
+                
+                div.innerHTML = `
+                    <input type="text" name="player_name[]" placeholder="${label} ${number} - Naam" class="px-4 py-2 rounded-lg bg-gray-700 text-white w-2/3" required>
+                    <input type="number" name="score[]" placeholder="Score" class="px-4 py-2 rounded-lg bg-gray-700 text-white w-1/3" required>
+                `;
+                participantsDiv.appendChild(div);
+            }
+            
+            // Show info message
+            const infoDiv = document.getElementById('reservationInfo');
+            infoDiv.classList.remove('hidden');
+            infoDiv.querySelector('p').textContent = `${total} deelnemers (${adults} volwassenen${kids > 0 ? ', ' + kids + ' kinderen' : ''})`;
+        }
+
+        // --- Handle reservation selection change ---
+        document.getElementById('reservationId').addEventListener('change', function() {
+            const selectedId = this.value;
+            if (!selectedId) {
+                document.getElementById('participants').innerHTML = '';
+                document.getElementById('reservationInfo').classList.add('hidden');
+                return;
+            }
+            
+            const reservation = reservationsData.find(r => r.reservation_id == selectedId);
+            if (reservation) {
+                const adults = parseInt(reservation.number_of_adults) || 0;
+                const kids = parseInt(reservation.number_of_kids) || 0;
+                generateParticipantFields(adults, kids);
+            }
         });
 
 
@@ -75,6 +119,7 @@
                 if (result.success) {
                     let options = '<option value="">Selecteer een reservering</option>';
                     const all = [...(result.today || []), ...(result.upcoming || []), ...(result.past || [])];
+                    reservationsData = all;
 
                     all.forEach(res => {
                         options += `<option value="${res.reservation_id}">
@@ -120,12 +165,8 @@
                     msgDiv.className = 'text-green-400 mt-4';
 
                     form.reset();
-
-                    document.getElementById('participants').innerHTML = `
-          <div class='flex gap-4 mb-2'>
-            <input type='text' name='player_name[]' placeholder='Naam deelnemer' class='px-4 py-2 rounded-lg bg-gray-700 text-white w-2/3' required>
-            <input type='number' name='score[]' placeholder='Score' class='px-4 py-2 rounded-lg bg-gray-700 text-white w-1/3' required>
-          </div>`;
+                    document.getElementById('participants').innerHTML = '';
+                    document.getElementById('reservationInfo').classList.add('hidden');
                 } else {
                     msgDiv.textContent = 'Fout: ' + result.message;
                     msgDiv.className = 'text-red-400 mt-4';
