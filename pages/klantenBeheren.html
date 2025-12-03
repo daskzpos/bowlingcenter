@@ -324,6 +324,55 @@
       document.getElementById('search').addEventListener('input', filterAndSortCustomers);
       document.getElementById('status-filter').addEventListener('change', filterAndSortCustomers);
       document.getElementById('sort-filter').addEventListener('change', filterAndSortCustomers);
+      
+      // Add form submission handler
+      const form = document.querySelector('#nieuwe-klant form');
+      form?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const firstName = document.getElementById('first-name').value.trim();
+        const lastName = document.getElementById('last-name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const phone = document.getElementById('phone').value.trim();
+        
+        // Validate
+        if (!firstName || !lastName || !email || !phone) {
+          alert('Alle velden zijn verplicht');
+          return;
+        }
+        
+        try {
+          const response = await fetch('../php/addCustomer.php', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              first_name: firstName,
+              last_name: lastName,
+              email: email,
+              phone: phone
+            })
+          });
+          
+          const result = await response.json();
+          
+          if (result.success) {
+            alert('Klant succesvol toegevoegd!');
+            // Clear form
+            form.reset();
+            // Reload customer list
+            loadCustomers();
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          } else {
+            alert('Fout: ' + result.message);
+          }
+        } catch (error) {
+          console.error('Error adding customer:', error);
+          alert('Er is een fout opgetreden bij het toevoegen van de klant');
+        }
+      });
     });
   </script>
 </body>
