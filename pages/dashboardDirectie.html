@@ -202,10 +202,13 @@
                     <p class="text-gray-400 text-sm">${res.number_of_adults} volwassenen${res.number_of_kids > 0 ? ', ' + res.number_of_kids + ' kinderen' : ''}</p>
                   </div>
                   <div class="flex gap-2">
-                    <button class="bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-red-700 transition">
+                    <button onclick="cancelReservation(${res.reservation_id})" class="bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-red-700 transition">
                       Annuleren
                     </button>
                   </div>
+                </div>
+              `).join('');
+            }
             
             // Display upcoming reservations
             const upcomingContainer = document.getElementById('upcoming-reservations');
@@ -359,5 +362,6 @@
           alert('Er is een fout opgetreden bij het bijwerken van de reservering');
         }
       }
-    </script>  </body>
+    </script>
+    </body>
 </html>
